@@ -9,12 +9,6 @@ import wx
 
 class CreateConfig():
     
-    def OnAbout(self, e):
-        dlg = wx.MessageDialog(self, "Creates a Webworks application.", 
-                               'About Webworks Application Builder',wx.OK)
-        dlg.ShowModal()
-        dlg.Destroy()
-        
     def OnExit(self, e):
         self.Close(True)
 

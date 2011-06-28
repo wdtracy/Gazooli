@@ -50,11 +50,11 @@ class MainWindow(wx.Frame):
         # Tool Bar
         self.mainFrame_toolbar = wx.ToolBar(self, -1, style=wx.TB_HORIZONTAL|wx.TB_FLAT)
         self.SetToolBar(self.mainFrame_toolbar)
-        self.mainFrame_toolbar.AddLabelTool(wx.NewId(), "Open", wx.Bitmap("C:\\Documents and Settings\\watracy\\workspace\\Webworks\\res\\subspace logo icon.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Open", "")
-        self.mainFrame_toolbar.AddLabelTool(wx.NewId(), "Save", wx.Bitmap("C:\\Documents and Settings\\watracy\\workspace\\Webworks\\res\\subspace logo icon.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Save", "")
+        self.mainFrame_toolbar.AddLabelTool(wx.NewId(), "Open", wx.Bitmap("..\\..\\res\\open16.gif", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Open", "")
+        self.mainFrame_toolbar.AddLabelTool(wx.NewId(), "Save", wx.Bitmap("..\\..\\res\\save16.gif", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Save", "")
         self.mainFrame_toolbar.AddSeparator()
-        self.mainFrame_toolbar.AddLabelTool(wx.NewId(), "Build", wx.Bitmap("C:\\Documents and Settings\\watracy\\workspace\\Webworks\\res\\subspace logo icon.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Build", "")
-        self.mainFrame_toolbar.AddLabelTool(wx.NewId(), "Sign", wx.Bitmap("C:\\Documents and Settings\\watracy\\workspace\\Webworks\\res\\subspace logo icon.png", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Sign", "")
+        self.mainFrame_toolbar.AddLabelTool(wx.NewId(), "Build", wx.Bitmap("..\\..\\res\\hammer16.gif", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Build", "")
+        self.mainFrame_toolbar.AddLabelTool(wx.NewId(), "Sign", wx.Bitmap("..\\..\\res\\lightning16.gif", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Sign", "")
         # Tool Bar end
         self.static_line_1 = wx.StaticLine(self, -1)
         self.projectBrowseButton = wx.Button(self, -1, "Browse")
@@ -86,10 +86,10 @@ class MainWindow(wx.Frame):
         self.focusBox = wx.CheckBox(self.infoTab, -1, "Use focus-based navigation on trackpad smartphones")
         self.iconLabel = wx.StaticText(self.infoTab, -1, "Icon")
         self.iconText = wx.TextCtrl(self.infoTab, -1, "")
-        self.iconBmpButton = wx.BitmapButton(self.infoTab, -1, wx.Bitmap("C:\\Documents and Settings\\watracy\\workspace\\Webworks\\res\\subspace logo 80x80.png", wx.BITMAP_TYPE_ANY))
+        self.iconBmpButton = wx.BitmapButton(self.infoTab, -1, wx.Bitmap("..\\..\\res\\subspace logo 80x80.png", wx.BITMAP_TYPE_ANY))
         self.hoverIconLabel = wx.StaticText(self.infoTab, -1, "Hover Icon")
         self.hoverIconText = wx.TextCtrl(self.infoTab, -1, "")
-        self.hoverIconBmpButton = wx.BitmapButton(self.infoTab, -1, wx.Bitmap("C:\\Documents and Settings\\watracy\\workspace\\Webworks\\res\\subspace logo 80x80.png", wx.BITMAP_TYPE_ANY))
+        self.hoverIconBmpButton = wx.BitmapButton(self.infoTab, -1, wx.Bitmap("..\\..\\res\\subspace logo 80x80.png", wx.BITMAP_TYPE_ANY))
         self.cacheTab = wx.Panel(self.tabCtrl, -1)
         self.cacheDisableBox = wx.CheckBox(self.cacheTab, -1, "Disable caching")
         self.cacheOptionsPanel = wx.Panel(self.cacheTab, -1, style=wx.RAISED_BORDER|wx.TAB_TRAVERSAL)
@@ -118,10 +118,10 @@ class MainWindow(wx.Frame):
         self.loadingScreenPane = wx.Panel(self.tabCtrl, -1)
         self.foreScreenLabel = wx.StaticText(self.loadingScreenPane, -1, "Foreground Image")
         self.foreScreenText = wx.TextCtrl(self.loadingScreenPane, -1, "")
-        self.foreScreenBMP = wx.BitmapButton(self.loadingScreenPane, -1, wx.Bitmap("C:\\Documents and Settings\\watracy\\workspace\\Webworks\\res\\subspace logo 80x80.png", wx.BITMAP_TYPE_ANY))
+        self.foreScreenBMP = wx.BitmapButton(self.loadingScreenPane, -1, wx.Bitmap("..\\..\\res\\subspace logo 80x80.png", wx.BITMAP_TYPE_ANY))
         self.backScreenLabel = wx.StaticText(self.loadingScreenPane, -1, "Background Image")
         self.backScreenText = wx.TextCtrl(self.loadingScreenPane, -1, "")
-        self.backScreenBMP = wx.BitmapButton(self.loadingScreenPane, -1, wx.Bitmap("C:\\Documents and Settings\\watracy\\workspace\\Webworks\\res\\subspace logo 80x80.png", wx.BITMAP_TYPE_ANY))
+        self.backScreenBMP = wx.BitmapButton(self.loadingScreenPane, -1, wx.Bitmap("..\\..\\res\\subspace logo 80x80.png", wx.BITMAP_TYPE_ANY))
         self.backColorLabel = wx.StaticText(self.loadingScreenPane, -1, "Background Color")
         self.backColorText = wx.TextCtrl(self.loadingScreenPane, -1, "")
         self.backColorPick = wx.ColourPickerCtrl(self.loadingScreenPane, -1)
@@ -399,16 +399,22 @@ class MainWindow(wx.Frame):
         event.Skip()
 
     def OnAbout(self, event): # wxGlade: MainWindow.<event_handler>
-        print "Event handler `OnAbout' not implemented"
-        event.Skip()
+        dlg = wx.MessageDialog(self, "Creates a Webworks application.", 
+                               'About Webworks Application Builder',wx.OK)
+        dlg.ShowModal()
+        dlg.Destroy()
 
     def OnIconChange(self, event): # wxGlade: MainWindow.<event_handler>
-        print "Event handler `OnIconChange' not implemented"
-        event.Skip()
+        """Browse for an icon"""
+        fileDlg = wx.FileDialog(self, "Choose an icon", wildcard="PNG files (*.png)|*.png" )
+        if fileDlg.ShowModal() == wx.ID_OK:
+            pass
 
     def OnHoverIconChange(self, event): # wxGlade: MainWindow.<event_handler>
-        print "Event handler `OnHoverIconChange' not implemented"
-        event.Skip()
+        """Browse for a hover icon"""
+        fileDlg = wx.FileDialog(self, "Choose an icon", wildcard="PNG files (*.png)|*.png" )
+        if fileDlg.ShowModal() == wx.ID_OK:
+            pass
 
     def OnDisableCache(self, event): # wxGlade: MainWindow.<event_handler>
         print "Event handler `OnDisableCache' not implemented"
