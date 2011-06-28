@@ -1,0 +1,13 @@
+# Compiled Files #
+##################
+*.pyc
+
+# Eclipse Files #
+#################
+.project
+.pydevproject
+.settings
+
+# Resources #
+#############
+res
