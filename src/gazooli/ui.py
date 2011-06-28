@@ -50,11 +50,11 @@ class MainWindow(wx.Frame):
         # Tool Bar
         self.mainFrame_toolbar = wx.ToolBar(self, -1, style=wx.TB_HORIZONTAL|wx.TB_FLAT)
         self.SetToolBar(self.mainFrame_toolbar)
-        self.mainFrame_toolbar.AddLabelTool(wx.NewId(), "Open", wx.Bitmap("..\\..\\res\\open16.gif", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Open", "")
-        self.mainFrame_toolbar.AddLabelTool(wx.NewId(), "Save", wx.Bitmap("..\\..\\res\\save16.gif", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Save", "")
+        self.mainFrame_toolbar.AddLabelTool(wx.NewId(), "Open", wx.Bitmap("C:\\Documents and Settings\\watracy\\workspace\\Gazooli\\res\\open16.gif", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Open", "")
+        self.mainFrame_toolbar.AddLabelTool(wx.NewId(), "Save", wx.Bitmap("C:\\Documents and Settings\\watracy\\workspace\\Gazooli\\res\\save16.gif", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Save", "")
         self.mainFrame_toolbar.AddSeparator()
-        self.mainFrame_toolbar.AddLabelTool(wx.NewId(), "Build", wx.Bitmap("..\\..\\res\\hammer16.gif", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Build", "")
-        self.mainFrame_toolbar.AddLabelTool(wx.NewId(), "Sign", wx.Bitmap("..\\..\\res\\lightning16.gif", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Sign", "")
+        self.mainFrame_toolbar.AddLabelTool(wx.NewId(), "Build", wx.Bitmap("C:\\Documents and Settings\\watracy\\workspace\\Gazooli\\res\\hammer16.gif", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Build", "")
+        self.mainFrame_toolbar.AddLabelTool(wx.NewId(), "Sign", wx.Bitmap("C:\\Documents and Settings\\watracy\\workspace\\Gazooli\\res\\lightning16.gif", wx.BITMAP_TYPE_ANY), wx.NullBitmap, wx.ITEM_NORMAL, "Sign", "")
         # Tool Bar end
         self.static_line_1 = wx.StaticLine(self, -1)
         self.projectBrowseButton = wx.Button(self, -1, "Browse")
@@ -86,10 +86,10 @@ class MainWindow(wx.Frame):
         self.focusBox = wx.CheckBox(self.infoTab, -1, "Use focus-based navigation on trackpad smartphones")
         self.iconLabel = wx.StaticText(self.infoTab, -1, "Icon")
         self.iconText = wx.TextCtrl(self.infoTab, -1, "")
-        self.iconBmpButton = wx.BitmapButton(self.infoTab, -1, wx.Bitmap("..\\..\\res\\subspace logo 80x80.png", wx.BITMAP_TYPE_ANY))
+        self.iconBmpButton = wx.BitmapButton(self.infoTab, -1, wx.Bitmap("C:\\Documents and Settings\\watracy\\workspace\\Gazooli\\res\\subspace logo 80x80.png", wx.BITMAP_TYPE_ANY))
         self.hoverIconLabel = wx.StaticText(self.infoTab, -1, "Hover Icon")
         self.hoverIconText = wx.TextCtrl(self.infoTab, -1, "")
-        self.hoverIconBmpButton = wx.BitmapButton(self.infoTab, -1, wx.Bitmap("..\\..\\res\\subspace logo 80x80.png", wx.BITMAP_TYPE_ANY))
+        self.hoverIconBmpButton = wx.BitmapButton(self.infoTab, -1, wx.Bitmap("C:\\Documents and Settings\\watracy\\workspace\\Gazooli\\res\\subspace logo 80x80.png", wx.BITMAP_TYPE_ANY))
         self.cacheTab = wx.Panel(self.tabCtrl, -1)
         self.cacheDisableBox = wx.CheckBox(self.cacheTab, -1, "Disable caching")
         self.cacheOptionsPanel = wx.Panel(self.cacheTab, -1, style=wx.RAISED_BORDER|wx.TAB_TRAVERSAL)
@@ -101,13 +101,14 @@ class MainWindow(wx.Frame):
         self.cacheAgeSpin = wx.SpinCtrl(self.cacheOptionsPanel, -1, "2592000", min=0, max=2592000, style=wx.SP_ARROW_KEYS|wx.TE_PROCESS_TAB|wx.TE_AUTO_URL)
         self.connectionsTab = wx.Panel(self.tabCtrl, -1)
         self.connectionOverrideBox = wx.CheckBox(self.connectionsTab, -1, "Override the default connection order and timeout")
-        self.connectionList = wx.ListBox(self.connectionsTab, -1, choices=["MDS", "BIS-B", "TCP WIFI", "TCP Cellular", "WAP 2.0", "WAP"], style=wx.LB_SINGLE)
-        self.addConnectionButton = wx.Button(self.connectionsTab, -1, "Add..")
-        self.removeConnectionButton = wx.Button(self.connectionsTab, -1, "Remove")
-        self.upConnectionButton = wx.Button(self.connectionsTab, -1, "Up")
-        self.downConnectionButton = wx.Button(self.connectionsTab, -1, "Down")
-        self.httpTimeoutLabel = wx.StaticText(self.connectionsTab, -1, "HTTP Connection Timeout (ms)")
-        self.httpTimeoutText = wx.TextCtrl(self.connectionsTab, -1, "30000")
+        self.connectionPanel = wx.Panel(self.connectionsTab, -1)
+        self.connectionList = wx.ListBox(self.connectionPanel, -1, choices=["MDS", "BIS-B", "TCP WIFI", "TCP Cellular", "WAP 2.0", "WAP"], style=wx.LB_SINGLE)
+        self.addConnectionButton = wx.Button(self.connectionPanel, -1, "Add..")
+        self.removeConnectionButton = wx.Button(self.connectionPanel, -1, "Remove")
+        self.upConnectionButton = wx.Button(self.connectionPanel, -1, "Up")
+        self.downConnectionButton = wx.Button(self.connectionPanel, -1, "Down")
+        self.httpTimeoutLabel = wx.StaticText(self.connectionPanel, -1, "HTTP Connection Timeout (ms)")
+        self.httpTimeoutText = wx.TextCtrl(self.connectionPanel, -1, "30000")
         self.startPagesTab = wx.Panel(self.tabCtrl, -1)
         self.forePageBox = wx.CheckBox(self.startPagesTab, -1, "Foreground start page")
         self.forePageText = wx.TextCtrl(self.startPagesTab, -1, "")
@@ -118,10 +119,10 @@ class MainWindow(wx.Frame):
         self.loadingScreenPane = wx.Panel(self.tabCtrl, -1)
         self.foreScreenLabel = wx.StaticText(self.loadingScreenPane, -1, "Foreground Image")
         self.foreScreenText = wx.TextCtrl(self.loadingScreenPane, -1, "")
-        self.foreScreenBMP = wx.BitmapButton(self.loadingScreenPane, -1, wx.Bitmap("..\\..\\res\\subspace logo 80x80.png", wx.BITMAP_TYPE_ANY))
+        self.foreScreenBMP = wx.BitmapButton(self.loadingScreenPane, -1, wx.Bitmap("C:\\Documents and Settings\\watracy\\workspace\\Gazooli\\res\\subspace logo 80x80.png", wx.BITMAP_TYPE_ANY))
         self.backScreenLabel = wx.StaticText(self.loadingScreenPane, -1, "Background Image")
         self.backScreenText = wx.TextCtrl(self.loadingScreenPane, -1, "")
-        self.backScreenBMP = wx.BitmapButton(self.loadingScreenPane, -1, wx.Bitmap("..\\..\\res\\subspace logo 80x80.png", wx.BITMAP_TYPE_ANY))
+        self.backScreenBMP = wx.BitmapButton(self.loadingScreenPane, -1, wx.Bitmap("C:\\Documents and Settings\\watracy\\workspace\\Gazooli\\res\\subspace logo 80x80.png", wx.BITMAP_TYPE_ANY))
         self.backColorLabel = wx.StaticText(self.loadingScreenPane, -1, "Background Color")
         self.backColorText = wx.TextCtrl(self.loadingScreenPane, -1, "")
         self.backColorPick = wx.ColourPickerCtrl(self.loadingScreenPane, -1)
@@ -165,6 +166,7 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_CHECKBOX, self.OnDisableCache, self.cacheDisableBox)
         self.Bind(wx.EVT_SPINCTRL, self.OnCacheSizeChange, self.cacheSizeSpin)
         self.Bind(wx.EVT_CHECKBOX, self.OnConnectionOverride, self.connectionOverrideBox)
+        self.Bind(wx.EVT_LISTBOX, self.OnConnectionListSelect, self.connectionList)
         self.Bind(wx.EVT_BUTTON, self.OnAddConnection, self.addConnectionButton)
         self.Bind(wx.EVT_BUTTON, self.OnRemoveConnection, self.removeConnectionButton)
         self.Bind(wx.EVT_BUTTON, self.OnUpConnection, self.upConnectionButton)
@@ -184,7 +186,7 @@ class MainWindow(wx.Frame):
     def __set_properties(self):
         # begin wxGlade: MainWindow.__set_properties
         self.SetTitle("Webworks Project Creator")
-        self.SetSize((450, 482))
+        self.SetSize((450, 530))
         self.SetBackgroundColour(wx.SystemSettings_GetColour(wx.SYS_COLOUR_3DFACE))
         self.MainStatusbar.SetStatusWidths([-1])
         # statusbar fields
@@ -200,14 +202,10 @@ class MainWindow(wx.Frame):
         self.iconBmpButton.SetMinSize((40, 40))
         self.hoverIconText.SetMinSize((265, 21))
         self.hoverIconBmpButton.SetMinSize((40, 40))
-        self.connectionList.Enable(False)
         self.connectionList.SetSelection(0)
         self.addConnectionButton.Enable(False)
-        self.removeConnectionButton.Enable(False)
         self.upConnectionButton.Enable(False)
-        self.downConnectionButton.Enable(False)
-        self.httpTimeoutLabel.Enable(False)
-        self.httpTimeoutText.Enable(False)
+        self.connectionPanel.Enable(False)
         self.forePageBox.SetValue(1)
         self.backPageText.Enable(False)
         self.autoRunBox.Enable(False)
@@ -313,7 +311,8 @@ class MainWindow(wx.Frame):
         connectionGrid.Add(connectionButtonSizer, 1, wx.EXPAND, 0)
         connectionGrid.Add(self.httpTimeoutLabel, 0, wx.ALIGN_RIGHT, 0)
         connectionGrid.Add(self.httpTimeoutText, 0, 0, 0)
-        connectionSizer.Add(connectionGrid, 1, wx.EXPAND, 0)
+        self.connectionPanel.SetSizer(connectionGrid)
+        connectionSizer.Add(self.connectionPanel, 1, wx.ALL|wx.EXPAND, 5)
         self.connectionsTab.SetSizer(connectionSizer)
         pageGrid.Add(self.forePageBox, 0, 0, 0)
         pageGrid.Add(self.forePageText, 0, wx.EXPAND, 0)
@@ -408,37 +407,62 @@ class MainWindow(wx.Frame):
         """Browse for an icon"""
         fileDlg = wx.FileDialog(self, "Choose an icon", wildcard="PNG files (*.png)|*.png" )
         if fileDlg.ShowModal() == wx.ID_OK:
-            pass
+            self.iconText.SetValue(fileDlg.GetPath())
+            # TODO: Add code to change button icon
 
     def OnHoverIconChange(self, event): # wxGlade: MainWindow.<event_handler>
         """Browse for a hover icon"""
         fileDlg = wx.FileDialog(self, "Choose an icon", wildcard="PNG files (*.png)|*.png" )
         if fileDlg.ShowModal() == wx.ID_OK:
-            pass
+            self.hoverIconText.SetValue(fileDlg.GetPath())
+            # TODO: Add code to change button icon
 
     def OnDisableCache(self, event): # wxGlade: MainWindow.<event_handler>
-        print "Event handler `OnDisableCache' not implemented"
-        event.Skip()
+        """Disables cache options when the "Disable cache" checkbox is checked"""
+        if self.cacheDisableBox.IsChecked():
+            self.cacheOptionsPanel.Disable()
+        else:
+            self.cacheOptionsPanel.Enable()
 
     def OnCacheSizeChange(self, event): # wxGlade: MainWindow.<event_handler>
-        print "Event handler `OnCacheSizeChange' not implemented"
-        event.Skip()
+        """Changes the maximum item cache size to match the maximum cache size """
+        min = self.itemCacheSpin.GetMin()
+        self.itemCacheSpin.SetRange(min, self.cacheSizeSpin.GetValue())
 
     def OnConnectionOverride(self, event): # wxGlade: MainWindow.<event_handler>
-        print "Event handler `OnConnectionOverride' not implemented"
-        event.Skip()
+        """Disables/enables the connection options window via the connection override checkbox"""
+        if self.connectionOverrideBox.IsChecked():
+            self.connectionPanel.Enable()
+        else:
+            self.connectionPanel.Disable()
 
     def OnAddConnection(self, event): # wxGlade: MainWindow.<event_handler>
         print "Event handler `OnAddConnection' not implemented"
         event.Skip()
 
     def OnRemoveConnection(self, event): # wxGlade: MainWindow.<event_handler>
-        print "Event handler `OnRemoveConnection' not implemented"
-        event.Skip()
+        """Remove the highlighted connection type"""
+        if not self.connectionList.IsEmpty():
+            index = self.connectionList.GetSelection()
+            self.connectionList.Delete(index)
+            if not self.connectionList.IsEmpty():
+                self.connectionList.Select(0)
 
     def OnUpConnection(self, event): # wxGlade: MainWindow.<event_handler>
-        print "Event handler `OnUpConnection' not implemented"
-        event.Skip()
+        """Moves the connection item up in the list of connection types"""
+        list = self.connectionList
+        if not list.IsEmpty():
+            index = list.GetSelection()
+            if index > 0:
+                value = list.GetString(index)
+                list.Delete(index)
+                list.Insert(value, index - 1)
+                list.Select(index - 1)
+                # TODO: fire event for selection
+            else:
+                print "Error: Can't move first item any higher in connection list!"
+        else:
+            print "Error: Move up an item in an empty connection list!"
 
     def OnDownConnection(self, event): # wxGlade: MainWindow.<event_handler>
         print "Event handler `OnDownConnection' not implemented"
@@ -514,6 +538,18 @@ class MainWindow(wx.Frame):
         destConfig.close()
         
         # Write the other project files here.
+
+    def OnConnectionListSelect(self, event): # wxGlade: MainWindow.<event_handler>
+        """Handle enabling/disabling the list control buttons based on the selected item"""
+        index = self.connectionList.GetSelection()
+        if index > 0:
+            self.upConnectionButton.Enable()
+        else:
+            self.upConnectionButton.Disable()
+        if index < self.connectionList.GetCount() - 1:
+            self.downConnectionButton.Enable()
+        else:
+            self.downConnectionButton.Disable()
 
 # end of class MainWindow
 
