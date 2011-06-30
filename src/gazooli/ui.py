@@ -9,6 +9,80 @@ import string
 # end wxGlade
 
 
+class AddConnectionDialog(wx.Dialog):
+    def __init__(self, *args, **kwds):
+        items = kwds["items"]
+        del kwds["items"]
+        # begin wxGlade: AddConnectionDialog.__init__
+        kwds["style"] = wx.DEFAULT_DIALOG_STYLE
+        wx.Dialog.__init__(self, *args, **kwds)
+        self.AddConnectionList = wx.ListBox(self, -1, choices=items, style=wx.LB_SINGLE)
+        self.AddConnectionButton = wx.Button(self, -1, "Add Connection")
+        self.CancelConnectionButton = wx.Button(self, -1, "Close")
+
+        self.__set_properties()
+        self.__do_layout()
+
+        self.Bind(wx.EVT_LISTBOX, self.OnConnectionTypeSelect, self.AddConnectionList)
+        self.Bind(wx.EVT_BUTTON, self.OnAddConnectionType, self.AddConnectionButton)
+        self.Bind(wx.EVT_BUTTON, self.OnCancelAddConnectionType, self.CancelConnectionButton)
+        # end wxGlade
+
+    def __set_properties(self):
+        # begin wxGlade: AddConnectionDialog.__set_properties
+        self.SetTitle("Add Connections")
+        self.AddConnectionList.SetMinSize((180, 135))
+        self.AddConnectionButton.Enable(False)
+        # end wxGlade
+
+    def __do_layout(self):
+        # begin wxGlade: AddConnectionDialog.__do_layout
+        AddConnectionSizer = wx.BoxSizer(wx.VERTICAL)
+        AddConnectionButtonSizer = wx.BoxSizer(wx.HORIZONTAL)
+        AddConnectionSizer.Add(self.AddConnectionList, 0, wx.ALL, 5)
+        AddConnectionButtonSizer.Add(self.AddConnectionButton, 0, wx.RIGHT, 5)
+        AddConnectionButtonSizer.Add(self.CancelConnectionButton, 0, 0, 0)
+        AddConnectionSizer.Add(AddConnectionButtonSizer, 1, wx.ALL|wx.ALIGN_RIGHT, 5)
+        self.SetSizer(AddConnectionSizer)
+        AddConnectionSizer.Fit(self)
+        self.Layout()
+        # end wxGlade
+
+    def OnConnectionTypeSelect(self, event): # wxGlade: AddConnectionDialog.<event_handler>
+        """Enables the "Add Connection" button if there is an item selected"""
+        if self.AddConnectionList.GetSelection() >= 0:
+            self.AddConnectionButton.Enable()
+
+    def OnAddConnectionType(self, event): # wxGlade: AddConnectionDialog.<event_handler>
+        """Adds the selected connection to the connections in the parent window and selects the
+        first item in the list or disables the button if the list is empty"""
+        index = self.AddConnectionList.GetSelection()
+        
+        # If there is no valid connection index = -1
+        if index >= 0:
+            connection = self.AddConnectionList.GetString(index)
+            
+            # Send the selection to the list in the parent window
+            parent = self.GetParent()
+            parent.connectionList.Append(connection)
+            parent.connectionList.Select(parent.connectionList.Count - 1)
+            parent.OnConnectionListSelect(event)
+            parent.availableConnections.remove(connection)
+            
+            # Select the next item or disable the button
+            self.AddConnectionList.Delete(index)
+            if not self.AddConnectionList.IsEmpty():
+                self.AddConnectionList.Select(0)
+            else:
+                self.AddConnectionButton.Disable()
+                parent.addConnectionButton.Disable()
+
+    def OnCancelAddConnectionType(self, event): # wxGlade: AddConnectionDialog.<event_handler>
+        self.Close()
+
+# end of class AddConnectionDialog
+
+
 class MyPanel(wx.Panel):
     def __init__(self, *args, **kwds):
         # content of this block not found: did you rename this class?
@@ -27,10 +101,10 @@ class MyPanel(wx.Panel):
 
 class MainWindow(wx.Frame):
     def __init__(self, *args, **kwds):
+        self.availableConnections = []
         # begin wxGlade: MainWindow.__init__
         kwds["style"] = wx.CAPTION|wx.CLOSE_BOX|wx.MINIMIZE_BOX|wx.SYSTEM_MENU
         wx.Frame.__init__(self, *args, **kwds)
-        self.availableConnections = []
         
         # Menu Bar
         self.MainMenubar = wx.MenuBar()
@@ -182,7 +256,6 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.OnAddFeature, self.addFeatureButton)
         self.Bind(wx.EVT_BUTTON, self.OnRemoveButton, self.removeDomainButton)
         self.Bind(wx.EVT_BUTTON, self.OnCreateConfig, self.createConfigButton)
-        self.Bind(wx.EVT_COLOURPICKER_CHANGED, self.OnColorSelect, self.backColorPick)
         # end wxGlade
 
     def __set_properties(self):
@@ -224,7 +297,6 @@ class MainWindow(wx.Frame):
         self.removeDomainButton.Enable(False)
         self.domainNameText.SetMinSize((300, 21))
         self.createConfigButton.Enable(False)
-        self.backColorText.SetValue(self.backColorPick.GetColour().GetAsString(wx.C2S_HTML_SYNTAX))
         # end wxGlade
 
     def __do_layout(self):
@@ -446,19 +518,21 @@ class MainWindow(wx.Frame):
             self.connectionPanel.Disable()
 
     def OnAddConnection(self, event): # wxGlade: MainWindow.<event_handler>
-        print "Event handler `OnAddConnection' not implemented"
-        event.Skip()
+        addDialog = AddConnectionDialog(self, items=self.availableConnections)
+        addDialog.ShowModal()
 
     def OnRemoveConnection(self, event): # wxGlade: MainWindow.<event_handler>
         """Remove the highlighted connection type"""
         self.addConnectionButton.Enable()
         
+        # If the list is not empty - remove the selected item
         if not self.connectionList.IsEmpty():
             index = self.connectionList.GetSelection()
             self.availableConnections.append(self.connectionList.GetString(index))
             self.connectionList.Delete(index)
             if not self.connectionList.IsEmpty():
-                self.connectionList.Select(0)
+                self.connectionList.Select(min(index, self.connectionList.Count - 1))
+        self.OnConnectionListSelect(event)
 
     def OnUpConnection(self, event): # wxGlade: MainWindow.<event_handler>
         """Moves the connection item up in the list of connection types"""
@@ -576,14 +650,20 @@ class MainWindow(wx.Frame):
     def OnConnectionListSelect(self, event): # wxGlade: MainWindow.<event_handler>
         """Handle enabling/disabling the list control buttons based on the selected item"""
         index = self.connectionList.GetSelection()
-        if index > 0:
-            self.upConnectionButton.Enable()
-        else:
-            self.upConnectionButton.Disable()
-        if index < self.connectionList.GetCount() - 1:
-            self.downConnectionButton.Enable()
+        if index >= 0:
+            self.removeConnectionButton.Enable()
+            if index > 0:
+                self.upConnectionButton.Enable()
+            else:
+                self.upConnectionButton.Disable()
+            if index < self.connectionList.GetCount() - 1:
+                self.downConnectionButton.Enable()
+            else:
+                self.downConnectionButton.Disable()
         else:
             self.downConnectionButton.Disable()
+            self.upConnectionButton.Disable()
+            self.removeConnectionButton.Disable()
 
 # end of class MainWindow
 
