@@ -30,6 +30,7 @@ class MainWindow(wx.Frame):
         # begin wxGlade: MainWindow.__init__
         kwds["style"] = wx.CAPTION|wx.CLOSE_BOX|wx.MINIMIZE_BOX|wx.SYSTEM_MENU
         wx.Frame.__init__(self, *args, **kwds)
+        self.availableConnections = []
         
         # Menu Bar
         self.MainMenubar = wx.MenuBar()
@@ -181,6 +182,7 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.OnAddFeature, self.addFeatureButton)
         self.Bind(wx.EVT_BUTTON, self.OnRemoveButton, self.removeDomainButton)
         self.Bind(wx.EVT_BUTTON, self.OnCreateConfig, self.createConfigButton)
+        self.Bind(wx.EVT_COLOURPICKER_CHANGED, self.OnColorSelect, self.backColorPick)
         # end wxGlade
 
     def __set_properties(self):
@@ -222,6 +224,7 @@ class MainWindow(wx.Frame):
         self.removeDomainButton.Enable(False)
         self.domainNameText.SetMinSize((300, 21))
         self.createConfigButton.Enable(False)
+        self.backColorText.SetValue(self.backColorPick.GetColour().GetAsString(wx.C2S_HTML_SYNTAX))
         # end wxGlade
 
     def __do_layout(self):
@@ -380,6 +383,12 @@ class MainWindow(wx.Frame):
         self.Layout()
         # end wxGlade
 
+    def LoadSizedBitmap(self, filename, width, height):
+        bitmap = wx.EmptyBitmap(1, 1)
+        bitmap.LoadFile(filename, wx.BITMAP_TYPE_ANY)
+        icon = wx.ImageFromBitmap(bitmap)
+        return icon.Scale(width, height).ConvertToBitmap()
+        
     def OnBrowse(self, event): # wxGlade: MainWindow.<event_handler>
         """Browse for the directory of the new project"""
         dirPath = ""
@@ -404,18 +413,18 @@ class MainWindow(wx.Frame):
         dlg.Destroy()
 
     def OnIconChange(self, event): # wxGlade: MainWindow.<event_handler>
-        """Browse for an icon"""
+        """Browse for an icon, load the path in iconText, and change the button image"""
         fileDlg = wx.FileDialog(self, "Choose an icon", wildcard="PNG files (*.png)|*.png" )
         if fileDlg.ShowModal() == wx.ID_OK:
             self.iconText.SetValue(fileDlg.GetPath())
-            # TODO: Add code to change button icon
+            self.iconBmpButton.SetBitmapLabel(self.LoadSizedBitmap(fileDlg.GetPath(), 40, 40))
 
     def OnHoverIconChange(self, event): # wxGlade: MainWindow.<event_handler>
         """Browse for a hover icon"""
         fileDlg = wx.FileDialog(self, "Choose an icon", wildcard="PNG files (*.png)|*.png" )
         if fileDlg.ShowModal() == wx.ID_OK:
             self.hoverIconText.SetValue(fileDlg.GetPath())
-            # TODO: Add code to change button icon
+            self.hoverIconBmpButton.SetBitmapLabel(self.LoadSizedBitmap(fileDlg.GetPath(), 40, 40))
 
     def OnDisableCache(self, event): # wxGlade: MainWindow.<event_handler>
         """Disables cache options when the "Disable cache" checkbox is checked"""
@@ -442,8 +451,11 @@ class MainWindow(wx.Frame):
 
     def OnRemoveConnection(self, event): # wxGlade: MainWindow.<event_handler>
         """Remove the highlighted connection type"""
+        self.addConnectionButton.Enable()
+        
         if not self.connectionList.IsEmpty():
             index = self.connectionList.GetSelection()
+            self.availableConnections.append(self.connectionList.GetString(index))
             self.connectionList.Delete(index)
             if not self.connectionList.IsEmpty():
                 self.connectionList.Select(0)
@@ -458,23 +470,42 @@ class MainWindow(wx.Frame):
                 list.Delete(index)
                 list.Insert(value, index - 1)
                 list.Select(index - 1)
-                # TODO: fire event for selection
+                self.OnConnectionListSelect(event)
             else:
                 print "Error: Can't move first item any higher in connection list!"
         else:
             print "Error: Move up an item in an empty connection list!"
 
     def OnDownConnection(self, event): # wxGlade: MainWindow.<event_handler>
-        print "Event handler `OnDownConnection' not implemented"
-        event.Skip()
+        """Moves the connection item up in the list of connection types"""
+        list = self.connectionList
+        if not list.IsEmpty():
+            index = list.GetSelection()
+            maxIndex = list.GetCount() - 1
+            if index < maxIndex:
+                value = list.GetString(index)
+                list.Delete(index)
+                list.Insert(value, index + 1)
+                list.Select(index + 1)
+                self.OnConnectionListSelect(event)
+            else:
+                print "Error: Can't move first item any lower in connection list!"
+        else:
+            print "Error: Move up an item in an empty connection list!"
 
     def OnForePageCheck(self, event): # wxGlade: MainWindow.<event_handler>
-        print "Event handler `OnForePageCheck' not implemented"
-        event.Skip()
+        if self.forePageBox.IsChecked():
+            self.forePageText.Enable()
+        else:
+            self.forePageText.Disable()
 
     def OnBackPageCheck(self, event): # wxGlade: MainWindow.<event_handler>
-        print "Event handler `OnBackPageCheck' not implemented"
-        event.Skip()
+        if self.backPageBox.IsChecked():
+            self.backPageText.Enable()
+            self.autoRunBox.Enable()
+        else:
+            self.backPageText.Disable()
+            self.autoRunBox.Disable()
 
     def OnOpenProject(self, event): # wxGlade: MainWindow.<event_handler>
         print "Event handler `OnOpenProject' not implemented"
@@ -519,6 +550,9 @@ class MainWindow(wx.Frame):
     def OnRemoveButton(self, event): # wxGlade: MainWindow.<event_handler>
         print "Event handler `OnRemoveButton' not implemented"
         event.Skip()
+        
+    def OnColorSelect(self, event):
+        self.backColorText.SetValue(self.backColorPick.GetColour().GetAsString(wx.C2S_HTML_SYNTAX))
 
     def OnCreateConfig(self, event): # wxGlade: MainWindow.<event_handler>
         """Write the configuration to config.xml in the project directory"""
