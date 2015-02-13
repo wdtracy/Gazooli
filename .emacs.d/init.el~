@@ -1,0 +1,15 @@
+(require 'package)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+
+(setq c-default-style '((java-mode . "java")
+                        (c-mode . "bsd")
+                        (c++-mode . "bsd")
+                        (awk-mode . "awk")
+                        (other . "gnu")))
+
+(setq-default c-basic-offset 4
+                  tab-width 4
+                  indent-tabs-mode t)
+
+(setq-default indent-tabs-mode nil)
+

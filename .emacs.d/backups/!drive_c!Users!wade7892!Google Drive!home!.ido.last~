@@ -1,0 +1,30 @@
+;;; -*- coding: utf-8 -*-
+
+;; ----- ido-last-directory-list -----
+(
+ ("c:/Users/wade7892/Google Drive/home/" . ".emacs.d/")
+)
+
+;; ----- ido-work-directory-list -----
+(
+ "c:/Users/wade7892/Google Drive/home/"
+ "c:/Users/wade7892/Google Drive/home/.emacs.d/"
+)
+
+;; ----- ido-work-file-list -----
+(
+ ".ido.last"
+ "init.el"
+)
+
+;; ----- ido-dir-file-cache -----
+(
+ ("c:/Users/wade7892/Google Drive/" (21725 9050 0 0) "Untitled spreadsheet.gsheet" "Talk on prophets.gdoc" "Projects/" "Laptop/" "Imported from Google Notebook - Mobile notes.gdoc" "home/" "eBooks/" "desktop.ini" "Backups/" "../" "./")
+
+ ("c:/Users/wade7892/Google Drive/home/" (21725 9358 0 0) ".ido.last" ".emacs.d/" "../" "./")
+
+ ("c:/Users/wade7892/Google Drive/home/.emacs.d/" (21725 9245 0 0) "places" "init.el~" "init.el" "elpa/" "backups/" "auto-save-list/" "../" "./")
+)
+
+;; ----- ido-unc-hosts-cache -----
+t
