@@ -1,3 +1,4 @@
+(package-initialize)
 (require 'use-package)
 
 (setq c-default-style '((java-mode . "java")
@@ -11,6 +12,10 @@
                   indent-tabs-mode t)
 
 (setq-default indent-tabs-mode nil)
+
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                         ("marmalade" . "https://marmalade-repo.org/packages/")
+                         ("melpa" . "http://melpa.milkbox.net/packages/")))
 
 (use-package expand-region                                
   :bind (("C-t" . er/expand-region)                       

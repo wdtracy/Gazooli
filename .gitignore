@@ -216,3 +216,5 @@ pip-log.txt
 .mr.developer.cfg
 auto-save-list/
 backups/
+*.last
+
