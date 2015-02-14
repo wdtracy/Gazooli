@@ -13,9 +13,9 @@
 
 (setq-default indent-tabs-mode nil)
 
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "https://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+(setq org-directory "~/org")
+(setq org-default-notes-file (concat org-directory "/notes.org"))
+     (define-key global-map "\C-cc" 'org-capture)
 
 (use-package expand-region                                
   :bind (("C-t" . er/expand-region)                       
@@ -36,8 +36,8 @@
 )
 
 (use-package org
-  :bind (("C-c C-l" . org-store-link)
-         ("C-c C-a" . org-agenda))
+  :bind (("C-c l" . org-store-link)
+         ("C-c a" . org-agenda))
   :config
   (progn
     (setq org-log-done t)
