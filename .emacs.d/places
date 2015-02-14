@@ -1,5 +1,8 @@
 ;;; -*- coding: utf-8 -*-
 (("c:/Home/Gazooli/.emacs.d/elpa/archives/gnu/archive-contents" . 17960)
+ ("c:/Home/Gazooli/.emacs.d/elpa/archives/melpa/archive-contents" . 367927)
+ ("c:/Home/Gazooli/.emacs.d/elpa/f-20150211.626/f-autoloads.el" . 159)
+ ("c:/Home/Gazooli/.emacs.d/elpa/s-20140910.334/s-autoloads.el" . 159)
  ("c:/Home/Gazooli/.emacs.d/elpa/use-package-20150118.722/use-package-autoloads.el" . 190)
  ("c:/Home/Gazooli/.emacs.d/elpa/use-package-20150118.722/use-package.el" . 1499)
  ("c:/Home/Gazooli/.emacs.d/init.el" . 1485))
