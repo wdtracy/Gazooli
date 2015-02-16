@@ -1,0 +1,4 @@
+* Tasks
+** TODO Learn more about Nim
+   [2015-02-15 Sun]
+   [[http://hookrace.net/blog/what-is-special-about-nim/]]
