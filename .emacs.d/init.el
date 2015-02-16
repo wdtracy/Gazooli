@@ -17,6 +17,15 @@
 (setq org-default-notes-file (concat org-directory "/notes.org"))
      (define-key global-map "\C-cc" 'org-capture)
 
+(use-package ispell
+  :config
+  (progn
+    (add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin/")
+    (setq ispell-program-name "aspell")
+    (setq ispell-personal-dictionary "C:/Home/Gazooli/.ispell")
+  )
+)
+
 (use-package expand-region                                
   :bind (("C-t" . er/expand-region)                       
          ("C-S-t" . er/contract-region)))                 
@@ -50,6 +59,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector ["black" "#d55e00" "#009e73" "#f8ec59" "#0072b2" "#cc79a7" "#56b4e9" "white"])
+ '(column-number-mode t)
  '(cua-mode nil nil (cua-base))
  '(custom-enabled-themes (quote (deeper-blue)))
  '(dired-isearch-filenames (quote dwim))
