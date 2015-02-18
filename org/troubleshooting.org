@@ -1,0 +1,11 @@
+* iCims Troubleshooting
+** Hired Applicant Feed
+*** Data not getting into MDM
+*** Data not getting into SAP
+There are 4 tables that must contain data to push the person to SAP:
+1. PersonMDM.dbo.Person - Must have the person
+2. WorkforceMDM.dbo.Workforce - Must have the person as a 'hired applicant'
+3. WorkforceMDM.dbo.Position - Must have the position number
+4. WorkforceMDM.dbo.Workforce_Position - Must have the relationship between the person and the position.  This query can help find an issue with this relationship: [[file:NoWorkforceToPosition.sql][Workforce_Position query]]
+If there the position is in that query result, than it means that the position was marked as filled, but the relationship is broken. To fix this, insert the person's workforceId into the workforce_position table.
+This all feeds into a view that is read in to SAP.  This view can be helpful for troubleshooting as well.  Here is the view without the pay information: [[file:icims.vwSQLRecruitmentDataSAP.sql][vwSQLRecruitmentDataSAP query]]
