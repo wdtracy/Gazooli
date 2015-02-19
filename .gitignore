@@ -218,3 +218,5 @@ auto-save-list/
 backups/
 *.last
 .emacs.d/elpa/archives/
+*.exe
+*.o
