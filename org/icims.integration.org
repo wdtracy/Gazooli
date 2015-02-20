@@ -1,0 +1,114 @@
+* BizTalk FaEdmIcimsSFTP
++ TFS: EDM\DEV\DEV_INT\Recruitment\BizTalk\FaEdmIcimsSFTP
++ Orchestration: FaEdm_Recruitment_hiredApplicant.odx
+
+** Picks up the file 
+Schedule: 9AM to 5:30PM checks every 5 minutes
+
+** Parses the file into flat file schema
++ Schema is bad
++ Data looks garbled, but it doesn't matter because BizTalk does not parse the data.
++ Removing the flat-file parsing kills the message routing
++ because of the bad schema, there has to be a blank line at the end of the file coming from iCIMS
+
+** Dumps the file into a backup location C:\Shares\FaEdm\Recruitment\AuditSecured\%SourceFileName% on the BizTalk server
+** Removes the file from the iCIMS ftp server
+** Drops another copy to c:\Shares\FaEdm\Recruitment\HiredApplicants\%SourceFileName% for SSIS
+
+** Launches the SSIS package to update MDM
++ Package: File_IcimsData_Sql.dtsx
++ TFS:  \EDM\DEV\DEV_INT\Recruitment\SSIS\Recruitment
+
+** Sends a success or failure message
++ Recipient: Icimsfeednotification@esri.com
++ Subject: Fail/Pass: New Hired Applicant File Deployed to WorkforceMdm
+
+** Launches the SSIS package to update SAP from MDM
++ Package: Sql_RecruitmentReturn_Sap.dtsx
++ TFS: \EDM\DEV\DEV_INT\Recruitment\SSIS\Recruitment
+
+** Sends a success or failure message
++ Recipient: Icimsfeednotification@esri.com
++ Subject: Fail/Pass :Push to SAP Failed for HiredApplicant File
+
+
+* File_IcimsData_Sql.dtsx
+** Parses the file
+** Looks up whether the person has been processed before
++ lookup key: externalRecruitmentId matches known externalRecruitmentId's in WorkforceMDM.dbo.vwWorkforce
++ match: log to DataQuality.dbo.ErrorPosition table - "iCims Feed: Position and Applicant have been previously processed"
++ Kills the process
+
+** Looks up if the position has already been filled
++ lookup key: position number matches positions in vwWorkforce_Position that have a status of 'Filled' (join to vwPosition)
++ match: log to DataQuality.dbo.ErrorPosition table - iCims Feed: Position is already filled by a different worker (Warning Only - Position will be occupied by more than one Individual)"
++ Just a warning, process continues
+
+** Looks up if the position exists
++ lookup key: position number exists in vwPosition
++ failure: log to DataQuality.dbo.ErrorPosition table - "iCims Feed: Position # not found"
++ Kills the process
+
+** Create GUID, truncate TmpKeyLookup, Adjust columns
+** Looks up if the person already exists in MDM
++ lookup key: externalRecruitmentId matches known externalRecruitmentId's in WorkforceMDM.dbo.vwWorkforce
++ match: Update path - This path should not happen since this same check happens at the second step and will log a failure on match
++ failure: Insert path
+
+** Call WorkforceMDM.dbo.uspInsertPerson
+*** TODO does some stuff to a temp table
+** Call WorkforceMDM.dbo.uspInsertWorkforce
+*** TODO does some stuff
++ Inserts as 'Hired Applicant'
+** Call WorkforceMDM.dbo.uspUpdatePosition
+*** TODO does some stuff
+** Call WorkforceMDM.dbo.uspMaintainHiredApplicantContactInfo
+*** TODO does some stuff
+** Troubleshooting
+*** Mainly just check DataQuality.dbo.ErrorPosition for issues - [[file:icims.ErrorPosition.sql][Error query]]
++ Previously processed errors are not a big deal because it probably means they have already been processed. What can be a problem is if they don't have the position relationship and they have that error.
++ Position not found will stop the import for that person, but can succeed the next day once the position exists.
++ Cost center errors are from another integration.
++ Already filled is just a warning and will be cleaned up automatically in another integration.
+*** There is a problem that has been seen where the person exists in the system but the connection to the position does not exist. This will cause the SAP load to fail.
+
+
+* Sql_RecruitmentReturn_Sap.dtsx
+** Pulls the data from MDM using MDMViews.icims.vwSQLRecruitmentDataSAP - [[file:icims.vwSQLRecruitmentDataSAP.sql::SELECT%20ROW_NUMBER()%20OVER%20(ORDER%20BY%20wf.PersonId%20ASC)%20AS%20RowId][Safe version of the view]]
++ The person needs PersonMDM, WorkforceMDM, and Workforce_Position entries and the position must exist in the Position table
+** The data is then sent to SAP using ZHR_ICIMS_MDM_FEED
++ The response is success or failure info
+** Failures are written to DataQuality.dbo.ERROR_ZHR_ICIMS_MDM_FEED
++ Usually fails due to missing data that is required by SAP.
+** The position table is updated
++ PositionStatus set to 'Onboarding'
++ PositionHourlyRate set to NULL
++ WHERE positionNumber and WorkforceId
+
+* TODO SAP stuff happens here
+
+* Sap_StageData_Sql.dtsx
+Job: Workforce_Staging
+TFS: EDM\DEV\DEV_INT\WorkforceMdm\SSIS\SapStaging
+
+** Truncate tables
+** Truncate error tables
+** Load Z_FAC_EXTRACT
+** Load the other tables
+** Load the ZHR_ICIMS_EXTRACT table (Recruiter role)
+** Load other stuff
+** Load data into sap.Positions
+
+
+* Sql_SapEmployee_Sql.dtsx
+Job: Workforce_Model
+TFS: EDM\DEV\DEV_INT\WorkforceMdm\SSIS\SAP
+
+** Update WorkforceType
+** Load Employee
+*** Person must exist in:
++ Staging.sap.Z_FAC_EXTRACT
++ Staging.sap.Z_PA0002_MDMV
++ Staging.sap.T529U
++ Staging.sap.Z_PA0001_MDMV
+
