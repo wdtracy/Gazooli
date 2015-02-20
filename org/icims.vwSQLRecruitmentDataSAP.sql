@@ -1,4 +1,5 @@
---[icims].[vwSQLRecruitmentDataSAP]	
+--[icims].[vwSQLRecruitmentDataSAP] This version does not have pay data so it is safe to run
+	
 SELECT ROW_NUMBER() OVER (ORDER BY wf.PersonId ASC) AS RowId 
 		,wf.PersonId
 		,wf.WorkforceId
