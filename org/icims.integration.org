@@ -111,4 +111,14 @@ TFS: EDM\DEV\DEV_INT\WorkforceMdm\SSIS\SAP
 + Staging.sap.Z_PA0002_MDMV
 + Staging.sap.T529U
 + Staging.sap.Z_PA0001_MDMV
+*** Additionally, to be picked up for phone lists and such, they can't be on this list: [[file:icims.missingEmployeeRecord.sql::SELECT%20main.*,][Missing employee record query]]
+** Truncate the temp table and add some fields
+** Determine the update/insert path
+*** Full Update
++ EmployeeRecordExists == 1 && !ISNULL(WorkforceId) && !ISNULL(EmployeeTablePersonId) && 1 == 1
+*** Full Insert - Pre-iCims
++ EmployeeRecordExists == 0 && ISNULL(WorkforceId) && ISNULL(iCimsTablePersonId) && 1 == 1
+*** UPDATE PERSON & WF - INSERT EMP - iCims Scenario
++ EmployeeRecordExists == 0 && !ISNULL(iCimsTableWorkforceId) && !ISNULL(iCimsTablePersonId) && 1 == 1
+
 
