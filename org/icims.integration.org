@@ -122,3 +122,12 @@ TFS: EDM\DEV\DEV_INT\WorkforceMdm\SSIS\SAP
 + EmployeeRecordExists == 0 && !ISNULL(iCimsTableWorkforceId) && !ISNULL(iCimsTablePersonId) && 1 == 1
 
 
+
+* SAP to MDM integration
+** Run the query to get employee data - [[file:LoadEmployeeFromSap.sql][LoadEmployeeFromSap Query]]
+** Determine the pathway
+*** Full Update - EmployeeRecordExists == 1 && !ISNULL(WorkforceId) && !ISNULL(EmployeeTablePersonId) && 1 == 1
+*** Full Insert - EmployeeRecordExists == 0 && ISNULL(WorkforceId) && ISNULL(iCimsTablePersonId) && 1 == 1
++ Run WorkforceMdm.dbo.uspInsertPerson - Returns the PersonId or writes to the error table DataQuality.dbo.ErrorPerson
++ 
+*** Update Person & WF - EmployeeRecordExists == 0 && !ISNULL(iCimsTableWorkforceId) && !ISNULL(iCimsTablePersonId) && 1 == 1
