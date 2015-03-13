@@ -1,0 +1,30 @@
+* Performance tips
+** Hardware
+*** Memory
+*** CPU
+*** Storage
+*** Network
+
+** Software
+*** Query Optimization
+**** Run query to see expensive queries - [[file:LongRunningQueries.sql][Long Running Queries Query]]
+*** Transaction Log File
+**** Fragmentation occurs when growing in small increments - 2GB at minimum - [[file:NumVlf.sql][Number of VLFs query]]
+**** Look at recommendations based on this query - [[file:RecommendedVlf.sql][Recommended VLF query]]
+*** Cost Threshold for Parallelism
++ This should be increased 20-50
++ CCE Dev has a large number of cost <= 25 - [[file:ParallelCosts.sql][Parallel Costs]]
+
+*** Number of TempDB data files - should match number of logical processors - [[file:CpuConfig.sql][CPU Query]]
++ CCE dev would be 6
++ http://www.mssqltips.com/sqlservertip/2833/sql-server-2012-best-practices-analyzer-tempdb-recommendations/
+
+*** Table statistics are usually not great, they should be deleted and re-calculated
++ Check when statistics were last updated on a table - [[file:CheckTableStatistics.sql][CheckTableStatistics.sql]]
+
+
+
+http://www.ssistalk.com/2012/07/16/ssis-2012-beware-the-ssis-server-maintenance-job/
+
+* Things to read
+** http://sqlblog.com/tags/Who+is+Active/default.aspx - read the 'A Month of Activity Monitoring'
